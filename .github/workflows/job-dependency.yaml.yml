@@ -1,0 +1,54 @@
+name: job-dependency
+
+on:
+  push:
+    branches: [ "develop" ]
+  workflow_dispatch:
+    inputs:
+      sleepSeconds:
+        description: "Sleep per timed step (seconds)"
+        required: false
+        default: "6"
+
+jobs:
+  prepare:
+    name: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare - Step 1
+        run: |
+          echo "prepare step 1"
+          sleep ${{ inputs.sleepSeconds || '6' }}
+
+      - name: Prepare - Step 2
+        run: |
+          echo "prepare step 2"
+          sleep ${{ inputs.sleepSeconds || '6' }}
+
+      - name: Prepare - Finish
+        run: echo "prepare done"
+
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify - Step 1
+        run: |
+          echo "verify step 1"
+          sleep ${{ inputs.sleepSeconds || '6' }}
+
+      - name: Verify - Step 2
+        run: |
+          echo "verify step 2"
+          sleep ${{ inputs.sleepSeconds || '6' }}
+
+      - name: Verify - Finish
+        run: echo "verify done"
+
