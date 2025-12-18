@@ -1,0 +1,68 @@
+name: multi-job-parallel
+
+on:
+  push:
+    branches: [ "develop" ]
+  workflow_dispatch:
+    inputs:
+      sleepShort:
+        description: "Short sleep (seconds)"
+        required: false
+        default: "4"
+      sleepLong:
+        description: "Long sleep (seconds)"
+        required: false
+        default: "8"
+
+jobs:
+  alpha:
+    name: alpha
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Alpha - Step 1
+        run: |
+          echo "alpha step 1"
+          sleep ${{ inputs.sleepShort || '4' }}
+      - name: Alpha - Step 2
+        run: |
+          echo "alpha step 2"
+          sleep ${{ inputs.sleepLong || '8' }}
+      - name: Alpha - Finish
+        run: echo "alpha done"
+
+  beta:
+    name: beta
+    runs-on: ubuntu-lates
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Beta - Step 1
+        run: |
+          echo "beta step 1"
+          sleep ${{ inputs.sleepLong || '8' }}
+      - name: Beta - Step 2
+        run: |
+          echo "beta step 2"
+          sleep ${{ inputs.sleepShort || '4' }}
+      - name: Beta - Finish
+        run: echo "beta done"
+
+  gamma:
+    name: gamma
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Gamma - Step 1
+        run: |
+          echo "gamma step 1"
+          sleep ${{ inputs.sleepShort || '4' }}
+      - name: Gamma - Step 2
+        run: |
+          echo "gamma step 2"
+          sleep ${{ inputs.sleepShort || '4' }}
+      - name: Gamma - Finish
+        run: echo "gamma done"
+
