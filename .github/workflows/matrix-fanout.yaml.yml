@@ -1,0 +1,43 @@
+name: matrix-fanout
+
+on:
+  push:
+    branches: [ "develop" ]
+  workflow_dispatch:
+    inputs:
+      fanout:
+        description: "Number of matrix jobs (comma-separated values)"
+        required: false
+        default: "1,2,3,4,5"
+      sleepSeconds:
+        description: "Sleep per step (seconds)"
+        required: false
+        default: "5"
+
+jobs:
+  matrix-job:
+    name: matrix-job-${{ matrix.id }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        id: [1, 2, 3, 4, 5]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Matrix context
+        run: |
+          echo "matrix.id=${{ matrix.id }}"
+          echo "branch=${GITHUB_REF_NAME}"
+          echo "sha=${GITHUB_SHA}"
+
+      - name: Timed step
+        run: |
+          echo "sleeping..."
+          sleep ${{ inputs.sleepSeconds || '5' }}
+
+      - name: Finish
+        run: echo "matrix job ${{ matrix.id }} done"
+
