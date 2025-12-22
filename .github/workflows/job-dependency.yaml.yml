@@ -1,6 +1,8 @@
 name: job-dependency
 
 on:
+  push:
+      branches: [ "develop" ]
   workflow_dispatch:
     inputs:
       sleepSeconds:
